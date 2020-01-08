@@ -1,4 +1,4 @@
-package com.yfsmsystem.theintegrations.components;
+package br.com.yfsmsystem.notificationsystem.components;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
