@@ -1,10 +1,11 @@
 package br.com.yfsmsystem.notificationsystem.service;
 
 import br.com.yfsmsystem.notificationsystem.NotificationRepository;
-import br.com.yfsmsystem.notificationsystem.components.ModelMapperComponent;
 import br.com.yfsmsystem.notificationsystem.dto.NotificationDto;
 import br.com.yfsmsystem.notificationsystem.entity.Notification;
 import br.com.yfsmsystem.notificationsystem.exception.NotificationNotFoundException;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,14 @@ import java.util.Optional;
 @Service
 public class NotificationService {
 
+    @Autowired
     NotificationRepository notificationRepository;
-    ModelMapperComponent modelMapperComponent;
 
-    public NotificationService(NotificationRepository notificationRepository, ModelMapperComponent modelMapperComponent) {
-        this.notificationRepository = notificationRepository;
-        this.modelMapperComponent = modelMapperComponent;
+
+    private ModelMapper modelMapperComponent;
+
+    public NotificationService() {
+        modelMapperComponent = new ModelMapper();
     }
 
 
@@ -28,7 +31,8 @@ public class NotificationService {
     }
 
     public Notification createNewNotification(NotificationDto notificationDto) {
-        Notification notification = modelMapperComponent.maping().map(notificationDto, Notification.class);
+        Notification notification = modelMapperComponent.map(notificationDto, Notification.class);
+        notification = notificationRepository.save(notification);
         return notificationRepository.save(notification);
     }
 

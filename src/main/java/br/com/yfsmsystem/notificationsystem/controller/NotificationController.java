@@ -2,6 +2,7 @@ package br.com.yfsmsystem.notificationsystem.controller;
 
 import br.com.yfsmsystem.notificationsystem.dto.NotificationDto;
 import br.com.yfsmsystem.notificationsystem.service.NotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +15,17 @@ import java.net.URI;
 @RequestMapping("api/v1/notification")
 public class NotificationController {
 
+    @Autowired
     NotificationService notificationService;
 
-    public NotificationController(NotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
+
 
     @GetMapping
     public ResponseEntity getListAllNotifications(Pageable pageable) {
         return ResponseEntity.ok(notificationService.listAllNotifications(pageable));
     }
 
-    @GetMapping("/{id")
+    @GetMapping("/{id}")
     public ResponseEntity getNotificationForId(@PathVariable Long id) {
         return ResponseEntity.ok(notificationService.getNotificationById(id));
     }
