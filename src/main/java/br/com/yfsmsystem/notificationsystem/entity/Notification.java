@@ -1,8 +1,8 @@
 package br.com.yfsmsystem.notificationsystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "notification")
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
 public class Notification {
 
     @Id
@@ -21,7 +21,7 @@ public class Notification {
     private Long id;
     private String title;
     private String description;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date publicationDate;

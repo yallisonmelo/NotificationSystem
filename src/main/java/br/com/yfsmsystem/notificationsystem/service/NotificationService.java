@@ -1,48 +1,51 @@
 package br.com.yfsmsystem.notificationsystem.service;
 
-import br.com.yfsmsystem.notificationsystem.NotificationRepository;
-import br.com.yfsmsystem.notificationsystem.dto.NotificationDto;
+import br.com.yfsmsystem.notificationsystem.converters.NotificationConverter;
+import br.com.yfsmsystem.notificationsystem.dto.NotificationInputDto;
+import br.com.yfsmsystem.notificationsystem.dto.NotificationOutputDto;
 import br.com.yfsmsystem.notificationsystem.entity.Notification;
 import br.com.yfsmsystem.notificationsystem.exception.NotificationNotFoundException;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.yfsmsystem.notificationsystem.repository.NotificationRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
+@RequiredArgsConstructor
 public class NotificationService {
 
-    @Autowired
-    NotificationRepository notificationRepository;
-
-
-    private ModelMapper modelMapperComponent;
-
-    public NotificationService() {
-        modelMapperComponent = new ModelMapper();
-    }
+    private final NotificationRepository notificationRepository;
+    private final NotificationConverter notificationConverter;
 
 
     public Page<Notification> listAllNotifications(Pageable pageable) {
         return notificationRepository.findAll(pageable);
     }
 
-    public Notification createNewNotification(NotificationDto notificationDto) {
-        Notification notification = modelMapperComponent.map(notificationDto, Notification.class);
-        notification = notificationRepository.save(notification);
-        return notificationRepository.save(notification);
+    public Notification createNewNotification(NotificationInputDto notificationInputDto) {
+        return notificationRepository
+                .save(notificationConverter
+                        .convertToNotification(notificationInputDto));
     }
 
-    public Optional<Notification> getNotificationById(Long id) {
-        return Optional.ofNullable(notificationRepository.findById(id).orElseThrow(NotificationNotFoundException::new));
+    public NotificationOutputDto getNotificationById(Long id) {
+        return notificationConverter.convertToNotificationOutputDto(
+                notificationRepository.findById(id)
+                        .orElseThrow(NotificationNotFoundException::new));
     }
 
     public void deleteNotificationById(Long id) {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(NotificationNotFoundException::new);
         notificationRepository.delete(notification);
+    }
+
+    public NotificationOutputDto alterNotification(NotificationInputDto notificationInputDto, Long id) {
+        Notification notification = notificationConverter.convertToNotification(notificationInputDto);
+        notification.setId(this.getNotificationById(id).getId());
+        return notificationConverter
+                .convertToNotificationOutputDto(
+                        notificationRepository.save(notification));
     }
 }
