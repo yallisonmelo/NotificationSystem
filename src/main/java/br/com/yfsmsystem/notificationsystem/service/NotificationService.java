@@ -20,7 +20,6 @@ public class NotificationService {
     private final NotificationConverter notificationConverter;
     private final  SQSComponent sqsComponent;
 
-
     public List<Notification> listAllNotifications() {
         return notificationRepository.findAll();
     }
