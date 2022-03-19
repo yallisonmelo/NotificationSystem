@@ -1,5 +1,6 @@
 package br.com.yfsmsystem.notificationsystem.service;
 
+import br.com.yfsmsystem.notificationsystem.components.SQSComponent;
 import br.com.yfsmsystem.notificationsystem.converters.NotificationConverter;
 import br.com.yfsmsystem.notificationsystem.dto.NotificationInputDto;
 import br.com.yfsmsystem.notificationsystem.dto.NotificationOutputDto;
@@ -17,6 +18,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final NotificationConverter notificationConverter;
+    private final  SQSComponent sqsComponent;
 
 
     public List<Notification> listAllNotifications() {
@@ -24,9 +26,11 @@ public class NotificationService {
     }
 
     public Notification createNewNotification(NotificationInputDto notificationInputDto) {
+        var notificationConverted = notificationConverter
+                .convertToNotification(notificationInputDto);
+        sqsComponent.sendSQSMessage(notificationInputDto);
         return notificationRepository
-                .save(notificationConverter
-                        .convertToNotification(notificationInputDto));
+                .save(notificationConverted);
     }
 
     public NotificationOutputDto getNotificationById(Long id) {

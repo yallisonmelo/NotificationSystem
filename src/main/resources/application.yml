@@ -5,3 +5,12 @@ server:
 spring:
     application:
         name: notification-service
+cloud:
+    aws:
+        region:
+            static: ${AWS_REGION}
+            auto: false
+        credentials:
+            access-key: ${AWS_ACCESS_KEY}
+            secret-key: ${AWS_SECRET_KEY}
+        sqs-url: ${SQS_URL}
