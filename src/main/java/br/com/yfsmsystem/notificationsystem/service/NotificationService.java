@@ -1,5 +1,6 @@
 package br.com.yfsmsystem.notificationsystem.service;
 
+import br.com.yfsmsystem.notificationsystem.components.SQSComponent;
 import br.com.yfsmsystem.notificationsystem.converters.NotificationConverter;
 import br.com.yfsmsystem.notificationsystem.dto.NotificationInputDto;
 import br.com.yfsmsystem.notificationsystem.dto.NotificationOutputDto;
@@ -7,9 +8,9 @@ import br.com.yfsmsystem.notificationsystem.entity.Notification;
 import br.com.yfsmsystem.notificationsystem.exception.NotificationNotFoundException;
 import br.com.yfsmsystem.notificationsystem.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,16 +18,19 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final NotificationConverter notificationConverter;
+    private final  SQSComponent sqsComponent;
 
 
-    public Page<Notification> listAllNotifications(Pageable pageable) {
-        return notificationRepository.findAll(pageable);
+    public List<Notification> listAllNotifications() {
+        return notificationRepository.findAll();
     }
 
     public Notification createNewNotification(NotificationInputDto notificationInputDto) {
+        var notificationConverted = notificationConverter
+                .convertToNotification(notificationInputDto);
+        sqsComponent.sendSQSMessage(notificationInputDto);
         return notificationRepository
-                .save(notificationConverter
-                        .convertToNotification(notificationInputDto));
+                .save(notificationConverted);
     }
 
     public NotificationOutputDto getNotificationById(Long id) {

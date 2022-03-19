@@ -29,7 +29,7 @@ public class SwaggerConfiguration extends WebMvcConfigurationSupport {
                 .apis(RequestHandlerSelectors.basePackage("br.com.yfsmsystem.notificationsystem.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .pathMapping("/api/v1")
+                .pathMapping("/api")
                 .forCodeGeneration(true)
                 .apiInfo(apiInfo());
 
