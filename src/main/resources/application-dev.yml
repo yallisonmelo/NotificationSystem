@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    hikari:
+      maximum-pool-size: 25
+    password: S3nh4@#
+    url: jdbc:h2:file:./db_dev/dev;DB_CLOSE_ON_EXIT=TRUE
+    username: dev
+  h2:
+    console:
+      enabled: true
+      path: /console
+      settings:
+        trace: false
+        web-allow-others: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          time_zone: UTC-3
+        show_sql: true
+        type: trace
+        use_sql_comments: false

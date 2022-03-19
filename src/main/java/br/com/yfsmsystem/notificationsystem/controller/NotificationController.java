@@ -10,17 +10,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping(RestConstants.PATH + RestConstants.API_VERSION_1 + RestConstants.RESOURCE_NOTIFICATION)
+@RequestMapping(RestConstants.API_VERSION_1 + RestConstants.RESOURCE_NOTIFICATION)
 @RequiredArgsConstructor
 @Api(value = "Api Notification - Documentation")
 public class NotificationController {
@@ -36,8 +35,8 @@ public class NotificationController {
             @ApiResponse(code = 404, message = "Not value in database")
     })
     @GetMapping
-    public ResponseEntity<Page<Notification>> getListAllNotifications(Pageable pageable) {
-        return ResponseEntity.ok(notificationService.listAllNotifications(pageable));
+    public ResponseEntity<List<Notification>> getListAllNotifications() {
+        return ResponseEntity.ok(notificationService.listAllNotifications());
     }
 
     @ApiOperation(
